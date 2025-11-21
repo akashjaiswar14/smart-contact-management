@@ -1,0 +1,27 @@
+{
+  "name": "smart_contact_management",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akashjaiswar14/smart-contact-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/akashjaiswar14/smart-contact-management/issues"
+  },
+  "homepage": "https://github.com/akashjaiswar14/smart-contact-management#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.1.17"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.17"
+  }
+}
