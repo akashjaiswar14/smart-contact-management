@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 import com.scm.services.impl.SecurityCustomUserDetailService;
 
 @Configuration
@@ -29,6 +29,9 @@ public class SecurityConfig {
 
     @Autowired
     private SecurityCustomUserDetailService userDetailService;
+
+    @Autowired
+    private OAuthAuthenticationSuccessHandler handler;
 
     // configuratin of authentication provider spring security
     @SuppressWarnings("deprecation")
@@ -58,11 +61,45 @@ public class SecurityConfig {
         httpSecurity.formLogin(formLogin -> {
             formLogin.loginPage("/login")
             .loginProcessingUrl("/authenticate")
-            .successForwardUrl("/user/dashboard")
-            .failureForwardUrl("/login?error=true");
+            .successForwardUrl("/user/dashboard");
+            // .failureForwardUrl("/login?error=true");
 
             formLogin.usernameParameter("email")
             .passwordParameter("password");
+
+            /*
+            formLogin.failureHandler(new AuthenticationFailureHandler() {
+
+                @Override
+                public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                        AuthenticationException exception) throws IOException, ServletException {
+                    // TODO Auto-generated method stub
+                    throw new UnsupportedOperationException("Unimplemented method 'onAuthenticationFailure'");
+                }
+                
+            });
+
+            formLogin.successHandler(new AuthenticationSuccessHandler() {
+
+                @Override
+                public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                        Authentication authentication) throws IOException, ServletException {
+                    // TODO Auto-generated method stub
+                    throw new UnsupportedOperationException("Unimplemented method 'onAuthenticationSuccess'");
+                }
+                
+            });*/
+        });
+
+        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+        httpSecurity.logout(logoutForm ->{
+            logoutForm.logoutUrl("/logout");
+            logoutForm.logoutSuccessUrl("/login?logout=true");
+        });
+
+        httpSecurity.oauth2Login(oauth->{
+            oauth.loginPage("/login");
+            oauth.successHandler(handler);
         });
 
         return httpSecurity.build();
