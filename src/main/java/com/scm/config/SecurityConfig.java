@@ -61,7 +61,7 @@ public class SecurityConfig {
         httpSecurity.formLogin(formLogin -> {
             formLogin.loginPage("/login")
             .loginProcessingUrl("/authenticate")
-            .successForwardUrl("/user/dashboard");
+            .defaultSuccessUrl("/user/profile", true);
             // .failureForwardUrl("/login?error=true");
 
             formLogin.usernameParameter("email")
@@ -92,14 +92,15 @@ public class SecurityConfig {
         });
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        httpSecurity.logout(logoutForm ->{
-            logoutForm.logoutUrl("/logout");
-            logoutForm.logoutSuccessUrl("/login?logout=true");
-        });
-
+        
         httpSecurity.oauth2Login(oauth->{
             oauth.loginPage("/login");
             oauth.successHandler(handler);
+        });
+
+        httpSecurity.logout(logoutForm ->{
+            logoutForm.logoutUrl("/logout");
+            logoutForm.logoutSuccessUrl("/login?logout=true");
         });
 
         return httpSecurity.build();

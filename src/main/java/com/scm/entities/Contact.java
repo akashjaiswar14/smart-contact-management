@@ -15,12 +15,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Contact {
 
     @Id
@@ -33,7 +35,7 @@ public class Contact {
     @Column(length = 1000)
     private String description;
     private boolean favorite = false;
-    private String websiteLink;
+    private String webSiteLink;
     private String linkedInLink;
     // private List<String> socialLinks=new ArrayList<>();
     private String cloudinaryImagePublicId;
