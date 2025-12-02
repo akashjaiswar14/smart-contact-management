@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html
+    lang="en"
+    th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}"
+    >
+    <head>
+        <title>All Your Contacts</title>
+    </head>
+    <body>
+        <div id="content">
+        <!-- sidebar -->
+
+        <!-- user is logged in : sidebar -->
+
+        <div th:if="${loggedInUser}">
+            <div data-th-replace="~{user/sidebar :: sidebar}"></div>
+        </div>
+
+        <div class="sm:pl-64 pt-20" style="height: 1000px">
+            <div class="">
+                <h1 class="text-5xl text-center">All your Contacts</h1>
+                <p class="text-center p-2">List of all contacts</p>
+
+                <!-- contact Table -->
+                
+
+                <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default border-gray-950 dark:bg-gray-800">
+                    <div class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 p-4">
+                        <div>
+                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="inline-flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 focus:outline-none" type="button">
+                            Action
+                            <svg class="w-4 h-4 ms-1.5 -me-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/></svg>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div id="dropdown" class="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-32">
+                            <ul class="p-2 text-sm text-body font-medium" aria-labelledby="dropdownDefaultButton">
+                            <li>
+                                <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Reward</a>
+                            </li>
+                            <li>
+                                <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Promote</a>
+                            </li>
+                            <li>
+                                <a href="#" class="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Archive</a>
+                            </li>
+                            <li>
+                                <a href="#" class="inline-flex items-center w-full p-2 text-fg-danger hover:bg-neutral-tertiary-medium rounded">Delete</a>
+                            </li>
+                            </ul>
+                        </div>
+                        </div>
+                        <label for="input-group-1" class="sr-only">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>
+                            </div>
+                            <input type="text" id="input-group-1" class="block w-full max-w-96 ps-9 pe-3 py-2 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body" placeholder="Search">
+                        </div>
+                    </div>
+                    <table class="w-full text-sm text-left rtl:text-right text-body p-10">
+                        <thead class="text-sm text-body bg-neutral-secondary-medium border-b border-t border-default-medium">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Phone
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Link
+                                </th>
+                                <th scope="col" class="px-6 py-3 font-medium">
+                                    Action
+                                </th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                <tr
+                                    data-th-object="${c}"
+                                    data-th-each="c : ${pageContact.getContent()}"
+                                    class="bg-neutral-primary-soft border-b border-default hover:bg-neutral-secondary-medium">
+                                
+                                    <th scope="row" class="flex items-center px-6 py-4 text-heading whitespace-nowrap">
+                                        <img 
+                                            class="w-10 h-10 rounded-full" 
+                                            data-th-src="@{*{picture}}"
+                                            onerror="this.src='https://www.google.com/url?sa=i&url=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3Ddefault%2Buser&psig=AOvVaw2J8w9VkqLbHLKyhPlcrIz9&ust=1764757439893000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOCY1vnXnpEDFQAAAAAdAAAAABAE'"
+                                            src="/docs/images/people/profile-picture-1.jpg" alt="Jese image">
+                                        <div class="ps-3">
+                                            <div 
+                                                class="text-base font-semibold"
+                                                data-th-text="*{name}"
+                                            >Name</div>
+                                            <div 
+                                            class="font-normal text-body"
+                                            data-th-text="*{email}"
+                                            >email</div>
+                                        </div>  
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <i class="fa-solid w-4 h-4 fa-phone"></i>
+                                        <span data-th-text="*{phoneNumber}">phone number</span>
+                                        
+                                    </td>
+                                    <!-- <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div data-th-if="*{favorite}" class="fa-solid fa-heart text-red-600 me-2"></div> 
+                                            <a data-th-href="@{*{webSiteLink}}"
+                                                target="_blank"
+                                            ><i class="fa-solid fa-link"></i></a>
+                                            <a data-th-href="@{*{linkedInLink}}"
+                                                target="_blank"
+                                            ><i class="fa-brands fa-linkedin p-2"></i></a>
+                                        </div>
+                                    </td> -->
+                                <td>
+                                    <div class="flex items-center">
+                                        <!-- If favorite = true → solid red heart -->
+                                        <i class="fa-solid fa-heart text-red-600 me-2"
+                                            data-th-if="${c.favorite}"></i>
+
+                                        <!-- If favorite = false → empty outline heart -->
+                                        <i class="fa-regular fa-heart text-gray-500 me-2"
+                                            data-th-if="${!c.favorite}"></i>
+
+                                        <a data-th-href="@{${c.webSiteLink}}" target="_blank">
+                                            <i class="fa-solid fa-link"></i>
+                                        </a>
+
+                                        <a data-th-href="@{${c.linkedInLink}}" target="_blank">
+                                            <i class="fa-brands fa-linkedin p-2"></i>
+                                        </a>
+                                    </div>
+                                </td>
+
+                                    <!-- action -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex space-x-3">
+                                            <a data-th-href="@{'/user/contacts/delete/' + ${c.id}}">
+                                                <i class="fa-solid fa-trash text-red-600"></i>
+                                            </a>
+
+                                            <a data-th-href="@{'/user/contacts/edit/' + ${c.id}}">
+                                                <i class="fa-solid fa-pen-to-square text-blue-600"></i>
+                                            </a>
+
+                                            <a data-th-href="@{'/user/contacts/view/' + ${c.id}}">
+                                                <i class="fa-solid fa-eye text-green-600"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- pagination component -->
+                        <div class="paginaiton_container p-5 flex justify-center dark:bg-gray-800">
+                            <nav aria-label="Page navigation example">
+                                <ul class="flex -space-x-px text-sm">
+                                    <li data-th-unless="${pageContact.first}">
+                                    <a 
+                                        data-th-href="@{'/user/contacts?size='+${pageSize}+'&page='+${pageContact.number-1}}"
+                                        href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm w-10 h-10 focus:outline-none">
+                                        <span class="sr-only">Previous</span>
+                                        <svg class="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
+                                    </a>
+                                    </li>
+                                    <li data-th-each="index : ${#numbers.sequence(0,pageContact.totalPages-1)}">
+                                    <a data-th-href="@{'/user/contacts?size='+${pageSize}+'&page='+${index}}"
+                                        data-th-classappend="${index==pageContact.number? 'bg-green-500' : 'bg-gray-800'}"
+                                        href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-10 h-10 focus:outline-none">
+                                        <span data-th-text="${index+1}"></span>
+                                    </a>
+                                    </li>
+                                    <li data-th-unless="${pageContact.last}">
+                                    <a 
+                                        data-th-href="@{'/user/contacts?size='+${pageSize}+'&page='+${pageContact.number+1}}"
+                                        href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm w-10 h-10 focus:outline-none">
+                                        <span class="sr-only">Next</span>
+                                        <svg class="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+                                    </a>
+                                    </li>
+                                </ul>
+                                </nav>
+                        </div>
+                </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+        </div>
+
+        <script>
+        console.log("this is profile page");
+        </script>
+    </body>
+</html>
