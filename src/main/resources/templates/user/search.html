@@ -4,7 +4,7 @@
     th:replace="~{base :: parent(~{::#content},~{::title},~{::script})}"
     >
     <head>
-        <title>All Your Contacts</title>
+        <title>Search</title>
     </head>
     <body>
         <div id="content">
@@ -16,14 +16,16 @@
             <div data-th-replace="~{user/sidebar :: sidebar}"></div>
         </div>
 
+        <!-- contat table -->
         <div class="sm:pl-64 pt-20" style="height: 1000px">
-            <div class="">
-                <h1 class="text-5xl text-center">All your Contacts</h1>
-                <p class="text-center p-2">List of all contacts</p>
-
-                <!-- contact Table -->
-                <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default border-gray-950 dark:bg-gray-800">
-                    <form 
+            <div class="p-4">
+                <h1 class="text-5xl">Search result</h1>
+                <p  data-th-text="${pageContact.totalElements} + ' result found'"
+                    class="p-2"
+                    ></p>
+            </div>
+            <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default border-gray-950 dark:bg-gray-800">
+                    <form
                         data-th-object="${contactSearchForm}"
                         data-th-action="@{'/user/contacts/search'}">
                         <div class="flex items-center space-x-4 p-4">
@@ -189,14 +191,14 @@
                                 <ul class="flex -space-x-px text-sm">
                                     <li data-th-unless="${pageContact.first}">
                                     <a 
-                                        data-th-href="@{'/user/contacts?size='+${pageSize}+'&page='+${pageContact.number-1}}"
+                                        data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${pageContact.number-1}+'&field='+${contactSearchForm.field}+'&keyword='+${contactSearchForm.keyword}}"
                                         href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm w-10 h-10 focus:outline-none">
                                         <span class="sr-only">Previous</span>
                                         <svg class="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
                                     </a>
                                     </li>
                                     <li data-th-each="index : ${#numbers.sequence(0,pageContact.totalPages-1)}">
-                                    <a data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${index}}"
+                                    <a data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${index}+'&field='+${contactSearchForm.field}+'&keyword='+${contactSearchForm.keyword}}"
                                         data-th-classappend="${index==pageContact.number? 'bg-green-500' : 'bg-gray-800'}"
                                         href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium text-sm w-10 h-10 focus:outline-none">
                                         <span data-th-text="${index+1}"></span>
@@ -204,7 +206,7 @@
                                     </li>
                                     <li data-th-unless="${pageContact.last}">
                                     <a 
-                                        data-th-href="@{'/user/contacts?size='+${pageSize}+'&page='+${pageContact.number+1}}"
+                                        data-th-href="@{'/user/contacts/search?size='+${pageSize}+'&page='+${pageContact.number+1}+'&field='+${contactSearchForm.field}+'&keyword='+${contactSearchForm.keyword}}"
                                         href="#" class="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm w-10 h-10 focus:outline-none">
                                         <span class="sr-only">Next</span>
                                         <svg class="w-4 h-4 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
@@ -216,11 +218,6 @@
                         <h1 class="text-5xl text-center dark:bg-gray-800 p-4" 
                             data-th-if="${pageContact.totalElements <= 0}">No result found</h1>
                 </div>
-                </div>
-            </div>
-
-        </div>
-        </div>
         </div>
 
         <script>

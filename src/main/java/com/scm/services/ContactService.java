@@ -20,9 +20,16 @@ public interface ContactService {
 
     void deleteContact(String id);
 
-    List<Contact> searchContact(String name, String email, String phoneNumber);
+    Page<Contact> searchByName(String name, int page, int size, String sortBy, String sortDireection, User user);
+
+    Page<Contact> searchByEmail(String email, int page, int size, String sortBy, String sortDireection, User user);
+
+    Page<Contact> searchByPhoneNumber(String phoneNumber, int page, int size, String sortBy, String sortDireection, User user);
+
+    Page<Contact> searchByFavourite(int page, int size, String sortBy, String sortDireection,User user);
 
     List<Contact> getByUserId(String userId);
 
     Page<Contact> getByUser(User user, int page, int size, String sortBy, String sortDireection);
+
 }

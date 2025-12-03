@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.scm.entities.Contact;
 import com.scm.entities.User;
 import com.scm.forms.ContactForm;
+import com.scm.forms.ContactSearchForm;
 import com.scm.helpers.AppConstants;
 import com.scm.helpers.Helper;
 import com.scm.helpers.Message;
@@ -119,6 +120,56 @@ public class ContactController {
         Page<Contact> pageContact = contactService.getByUser(user, page, size, sortBy, sortDirection);
         model.addAttribute("pageContact",pageContact);
         model.addAttribute("pageSize", AppConstants.PAGE_SIZE);
+        model.addAttribute("contactSearchForm", new ContactSearchForm());
         return "user/contacts"; 
     }
+
+    // search handler
+    @RequestMapping("/search")
+    public String searchHandler(
+        @ModelAttribute ContactSearchForm contactSearchForm,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = AppConstants.PAGE_SIZE+"") int size,
+        @RequestParam(value = "sortBy",defaultValue = "name") String sortBy,
+        @RequestParam(value = "sortDirection", defaultValue = "asc") String sortDirection,
+        Model model,
+        Authentication authentication 
+    ){
+        logger.info("field {} keyword {}",contactSearchForm.getField(), contactSearchForm.getKeyword());
+
+        var user = userService.getUserByEmail(Helper.getEmailOfLoggedInUser(authentication));
+
+        Page<Contact> pageContact = null;
+        switch (contactSearchForm.getField().toLowerCase()) {
+
+        case "name":
+            pageContact = contactService.searchByName(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+            break;
+
+        case "email":
+            pageContact = contactService.searchByEmail(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+            break;
+
+        case "phonenumber":
+            pageContact = contactService.searchByPhoneNumber(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+            break;
+
+        case "favorite":
+            pageContact = contactService.searchByFavourite(page, size, sortBy, sortDirection, user);
+            break;
+
+        default:
+            pageContact = Page.empty();
+            break;
+    }
+
+        logger.info("pageContact {}",pageContact);
+        model.addAttribute("contactSearchForm", contactSearchForm);
+        model.addAttribute("pageContact", pageContact);
+        model.addAttribute("pageSize", AppConstants.PAGE_SIZE);
+        return "user/search";
+    }
+        
+    
+
 }

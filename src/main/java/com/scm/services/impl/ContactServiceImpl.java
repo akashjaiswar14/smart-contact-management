@@ -55,11 +55,6 @@ public class ContactServiceImpl implements ContactService{
         contactRepo.delete(contact);
     }
 
-    @Override
-    public List<Contact> searchContact(String name, String email, String phoneNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchContact'");
-    }
 
     @Override
     public List<Contact> getByUserId(String userId) {
@@ -74,5 +69,39 @@ public class ContactServiceImpl implements ContactService{
         var pageable = PageRequest.of(page, size);
         return contactRepo.findByUser(user, pageable);
     }
+
+    @Override
+    public Page<Contact> searchByName(String name, int page, int size, String sortBy, String sortDireection, User user) {
+        
+        Sort sort = sortDireection.equals("desc") ? Sort.by(sortBy).descending() :  Sort.by(sortBy).ascending();
+        var pageable = PageRequest.of(page, size, sort);
+        return contactRepo.findByUserAndNameContaining(user, name,pageable);
+    }
+
+    @Override
+    public Page<Contact> searchByEmail(String email,int page, int size, String sortBy, String sortDireection, User user) {
+        Sort sort = sortDireection.equals("desc") ? Sort.by(sortBy).descending() :  Sort.by(sortBy).ascending();
+        var pageable = PageRequest.of(page, size, sort);
+        return contactRepo.findByUserAndEmailContaining(user, email, pageable);
+    }
+
+    @Override
+    public Page<Contact> searchByPhoneNumber(String phoneNumber, int page, int size, String sortBy, String sortDireection,User user) {
+        Sort sort = sortDireection.equals("desc") ? Sort.by(sortBy).descending() :  Sort.by(sortBy).ascending();
+        var pageable = PageRequest.of(page, size, sort);
+        return contactRepo.findByUserAndPhoneNumberContaining(user, phoneNumber, pageable);
+    }
+
+    @Override
+    public Page<Contact> searchByFavourite(int page, int size, String sortBy, String sortDirection, User user) {
+
+    Sort sort = sortDirection.equalsIgnoreCase("desc")
+            ? Sort.by(sortBy).descending()
+            : Sort.by(sortBy).ascending();
+
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    return contactRepo.findByUserAndFavoriteTrue(user, pageable);
+}
 
 }
