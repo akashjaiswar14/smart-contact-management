@@ -174,9 +174,9 @@
                                                 <i class="fa-solid fa-pen-to-square text-blue-600"></i>
                                             </a>
 
-                                            <a data-th-href="@{'/user/contacts/view/' + ${c.id}}">
+                                            <button th:data-id="${c.id}" th:onclick="loadContactData(this.getAttribute('data-id'))">
                                                 <i class="fa-solid fa-eye text-green-600"></i>
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -218,8 +218,10 @@
                         <h1 class="text-5xl text-center dark:bg-gray-800 p-4" 
                             data-th-if="${pageContact.totalElements <= 0}">No result found</h1>
                 </div>
+                    <div data-th-replace="~{user/contact_modals :: contact}"></div>
+            </div>
         </div>
-
+        <script data-th-src="@{'/js/contacts.js'}"></script>
         <script>
         console.log("this is profile page");
         </script>

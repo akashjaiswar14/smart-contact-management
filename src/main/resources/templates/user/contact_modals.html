@@ -1,0 +1,163 @@
+<div data-th-fragment="contact">
+    
+    <!-- Main modal -->
+    <div 
+        id="view_contact_model" 
+        tabindex="-1" 
+        aria-hidden="true" 
+        class="hidden  overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div 
+            class="relative dark:bg-gray-800 border rounded-2xl border-gray-900 p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div 
+                class="relative bg-neutral-primary-soft border border-gray-900 rounded-base shadow-sm p-4 md:p-6">
+                <!-- Modal header -->
+                <div 
+                    class="flex items-center justify-between border-b border-gray-900 border-default pb-4 md:pb-5">
+                    <div>
+                        <h3 
+                        id="contact_name"
+                        class="text-lg font-medium text-heading text-blue-600">
+                        Terms of Service
+                        </h3>
+                        <p class="text-blue-400" id="contact_email"></p> 
+                    </div>
+                    <button 
+                        type="button" 
+                        class="text-body bg-red-500 hover:bg-red-600 hover:bg-neutral-tertiary hover:text-heading rounded-2xl text-sm w-9 h-9 ms-auto inline-flex justify-center items-center" 
+                        onclick="closeContactModel()">
+                        <svg 
+                            class="w-5 h-5" 
+                            aria-hidden="true" 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="24" 
+                            height="24" 
+                            fill="none" 
+                            viewBox="0 0 24 24"
+                        >
+                            <path 
+                                stroke="currentColor" 
+                                stroke-linecap="round" 
+                                stroke-linejoin="round" 
+                                stroke-width="2" 
+                                d="M6 18 17.94 6M18 18 6.06 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4">
+                    <!--  other contact information  --> 
+                    <div class="relative overflow-x-auto">
+                        <table
+                        class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400"
+                        >
+                        <tbody>
+                            <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                            <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                                <i class="fa-solid fa-location-dot w-6 h-6"></i>
+                            </th>
+                            <td class="px-6 py-4">
+                                <!-- <p class="text-blue-400" id="contact_email"></p>  -->
+                                <span id="contact_address"
+                                ></span
+                                >
+                            </td>
+                            </tr>
+
+                            <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                            <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                                <i class="fa-solid fa-user w-6 h-6"></i>
+                            </th>
+                            <td class="px-6 py-4">
+                                <span id="contact_about"
+                                ></span
+                                >
+                            </td>
+                            </tr>
+                            <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                            <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                                <i class="fa-regular fa-heart w-6 h-6"></i>
+                            </th>
+                            <td class="px-6 py-4">
+                                <span id="contact_favorite"
+                                >This is your favorite contact</span
+                                >
+                            </td>
+                            </tr>
+                            <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                            <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                                <i class="fa-solid fa-earth-americas w-6 h-6"></i>
+                            </th>
+                            <td class="px-6 py-4">
+                                <a id="contact_website">www.learncodewithdurgesh.com</a>
+                            </td>
+                            </tr>
+                            <tr
+                            class="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                            >
+                            <th
+                                scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                                <i class="fa-brands fa-linkedin-in w-6 h-6"></i>
+                            </th>
+                            <td class="px-6 py-4">
+                                <a id="contact_linkedIn">www.learncodewithdurgesh.com</a>
+                            </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                    </div>
+                <!-- Modal footer -->
+                <div class="flex items-center border-t border-default space-x-4 pt-4 md:pt-5">
+
+                <!-- GREEN ACCEPT BUTTON -->
+                <button 
+                    onclick="closeContactModel()"
+                    type="button" 
+                    class="text-white bg-green-600 box-border border border-transparent 
+                        dark:hover:bg-green-800 focus:ring-4 focus:ring-green-300 
+                        shadow-xs font-medium leading-5 rounded-base text-sm 
+                        px-4 py-2.5 focus:outline-none">
+                    I accept
+                </button>
+
+                <!-- RED DECLINE BUTTON -->
+                <button 
+                    onclick="closeContactModel()"
+                    type="button" 
+                    class="text-white bg-red-500 box-border border border-transparent 
+                        dark:hover:bg-red-700 focus:ring-4 focus:ring-red-400 
+                        shadow-xs font-medium leading-5 rounded-base text-sm 
+                        px-4 py-2.5 focus:outline-none">
+                    Decline
+                </button>
+
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,10 +19,13 @@
         <div class="sm:pl-64 pt-20" style="height: 1000px">
             <div class="">
                 <h1 class="text-5xl text-center">All your Contacts</h1>
-                <p class="text-center p-2">List of all contacts</p>
+                <p  data-th-text="'Total '+${pageContact.totalElements} + ' contact'"
+                    class="p-2"
+                    ></p>
 
                 <!-- contact Table -->
                 <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default border-gray-950 dark:bg-gray-800">
+                    <div data-th-replace="~{message :: messagebox}"></div>
                     <form 
                         data-th-object="${contactSearchForm}"
                         data-th-action="@{'/user/contacts/search'}">
@@ -164,17 +167,24 @@
                                     <!-- action -->
                                     <td class="px-6 py-4">
                                         <div class="flex space-x-3">
-                                            <a data-th-href="@{'/user/contacts/delete/' + ${c.id}}">
+                                            <!-- <a data-th-href="@{'/user/contacts/delete/'+*{id}}">
                                                 <i class="fa-solid fa-trash text-red-600"></i>
-                                            </a>
+                                            </a> -->
 
-                                            <a data-th-href="@{'/user/contacts/edit/' + ${c.id}}">
+                                            <button
+                                            th:data-id="${c.id}"
+                                            th:onclick="deleteContact(this.getAttribute('data-id'))">
+                                                <i class="fa-solid fa-trash text-red-600"></i>
+                                            </button>
+
+
+                                            <a data-th-href="@{'/user/contacts/view/' + *{id}}">
                                                 <i class="fa-solid fa-pen-to-square text-blue-600"></i>
                                             </a>
 
-                                            <a data-th-href="@{'/user/contacts/view/' + ${c.id}}">
+                                            <button th:data-id="${c.id}" th:onclick="loadContactData(this.getAttribute('data-id'))">
                                                 <i class="fa-solid fa-eye text-green-600"></i>
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -217,12 +227,11 @@
                             data-th-if="${pageContact.totalElements <= 0}">No result found</h1>
                 </div>
                 </div>
+                <div data-th-replace="~{user/contact_modals :: contact}"></div>
             </div>
-
+            
         </div>
-        </div>
-        </div>
-
+        <script data-th-src="@{'/js/contacts.js'}"></script>
         <script>
         console.log("this is profile page");
         </script>

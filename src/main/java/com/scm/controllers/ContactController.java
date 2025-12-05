@@ -11,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -79,9 +81,7 @@ public class ContactController {
         User user = userService.getUserByEmail(userName);
         // process the form data
         
-        String filename = UUID.randomUUID().toString();
-        // image updload code
-        String fileURL = imageService.uploadImage(contactForm.getContactImage(), filename);
+        
 
         Contact contact = new Contact();
         contact.setName(contactForm.getName());
@@ -93,8 +93,15 @@ public class ContactController {
         contact.setUser(user);
         contact.setLinkedInLink(contactForm.getLinkedInLink());
         contact.setWebSiteLink(contactForm.getWebSiteLink());
-        contact.setPicture(fileURL);
-        contact.setCloudinaryImagePublicId(filename);
+
+        if (contactForm.getContactImage() !=null && !contactForm.getContactImage().isEmpty()) {
+            String filename = UUID.randomUUID().toString();
+        // image updload code
+            String fileURL = imageService.uploadImage(contactForm.getContactImage(), filename);
+            contact.setPicture(fileURL);
+            contact.setCloudinaryImagePublicId(filename);
+        }
+
         contactService.saveContact(contact);
         System.out.println(contactForm);
         // redirect to add contact page
@@ -140,28 +147,37 @@ public class ContactController {
         var user = userService.getUserByEmail(Helper.getEmailOfLoggedInUser(authentication));
 
         Page<Contact> pageContact = null;
-        switch (contactSearchForm.getField().toLowerCase()) {
+        String field = contactSearchForm.getField();
 
-        case "name":
-            pageContact = contactService.searchByName(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
-            break;
+        // 1. Null or empty → apply default field
+        if (field == null || field.trim().isEmpty()) {
+            field = "name"; // your default search field
+        }
 
-        case "email":
-            pageContact = contactService.searchByEmail(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
-            break;
+        // 2. Normalize field to lowercase safely
+        field = field.toLowerCase();
 
-        case "phonenumber":
-            pageContact = contactService.searchByPhoneNumber(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
-            break;
+        switch (field) {
+            case "name":
+                pageContact = contactService.searchByName(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+                break;
 
-        case "favorite":
-            pageContact = contactService.searchByFavourite(page, size, sortBy, sortDirection, user);
-            break;
+            case "email":
+                pageContact = contactService.searchByEmail(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+                break;
 
-        default:
-            pageContact = Page.empty();
-            break;
-    }
+            case "phonenumber":
+                pageContact = contactService.searchByPhoneNumber(contactSearchForm.getKeyword(), page, size, sortBy, sortDirection, user);
+                break;
+
+            case "favorite":
+                pageContact = contactService.searchByFavourite(page, size, sortBy, sortDirection, user);
+                break;
+
+            default:
+                pageContact = Page.empty();
+                break;
+        }
 
         logger.info("pageContact {}",pageContact);
         model.addAttribute("contactSearchForm", contactSearchForm);
@@ -169,7 +185,83 @@ public class ContactController {
         model.addAttribute("pageSize", AppConstants.PAGE_SIZE);
         return "user/search";
     }
+
+    @RequestMapping("/delete/{contactId}")
+    public String deleteContact(@PathVariable String contactId, HttpSession session){
         
+        contactService.deleteContact(contactId);
+        session.setAttribute("message",
+            Message.builder()
+            .content("Contact is deleted successfully...")
+            .type(MessageType.green)
+            .build()
+        );
+        return "redirect:/user/contacts";
+    }
+    
+    // update contact form view
+    @GetMapping("/view/{contactId}")
+    public String updateContactFormView(
+        @PathVariable("contactId") String contactId, Model modal
+    ){
+        var contact = contactService.getContactById(contactId);
+
+        ContactForm contactForm = new ContactForm();
+        contactForm.setName(contact.getName());
+        contactForm.setAddress(contact.getAddress());
+        contactForm.setEmail(contact.getEmail());
+        contactForm.setPhoneNumber(contact.getPhoneNumber());
+        contactForm.setDescription(contact.getDescription());
+        contactForm.setFavorite(contact.isFavorite());
+        contactForm.setWebSiteLink(contact.getWebSiteLink());
+        contactForm.setLinkedInLink(contact.getLinkedInLink());
+        contactForm.setPicture(contact.getPicture());
+
+
+        modal.addAttribute("contactForm", contactForm);
+        modal.addAttribute("contactId", contactId);
+        return "/user/update_contact_view";
+    }
+
+    @RequestMapping(value = "/update/{contactId}", method = RequestMethod.POST)
+    public String updateContact(@PathVariable("contactId") String contactId, 
+                                @ModelAttribute ContactForm contactForm, 
+                                BindingResult bindingResult,
+                                Model model){
+        
+        if (bindingResult.hasErrors()) {
+            return "/user/update_contact_view";
+        }
+        // update the contact
+        var con = contactService.getContactById(contactId);
+        con.setId(contactId);
+        con.setName(contactForm.getName());
+        con.setEmail(contactForm.getEmail());
+        con.setAddress(contactForm.getAddress());
+        con.setPhoneNumber(contactForm.getPhoneNumber());
+        con.setDescription(contactForm.getDescription());
+        con.setLinkedInLink(contactForm.getLinkedInLink());
+        con.setWebSiteLink(contactForm.getWebSiteLink());
+        con.setFavorite(contactForm.isFavorite());
+        con.setPicture(contactForm.getPicture());
+
+        if (contactForm.getContactImage() != null && !contactForm.getContactImage().isEmpty()) {
+            String fileName = UUID.randomUUID().toString();
+            String imageURL =imageService.uploadImage(contactForm.getContactImage(), fileName);
+            con.setCloudinaryImagePublicId(imageURL);
+            con.setPicture(imageURL);
+            contactForm.setPicture(imageURL);
+
+        }
+        
+        contactService.updateContact(con);
+        model.addAttribute("message", Message.builder()
+                                            .content("Contact updated successfully")
+                                            .type(MessageType.green)
+                                            .build());
+
+        return "redirect:/user/contacts/view/" + contactId;
+    }
     
 
 }
